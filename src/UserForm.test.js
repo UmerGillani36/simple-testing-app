@@ -14,14 +14,20 @@ test('it shows two inputs and a button', async()=>{
 });
 
 test('it calls onUserAdd when the form is submitted', ()=>{
-    const argList = [];
-    const callback = (...args)=>{
-        argList.push(args);
-    }
+    //not the best way
+    // const argList = [];
+    // const callback = (...args)=>{
+    //     argList.push(args);
+    // }
 
-    render(<UserForm onUserAdd={callback}/>);
+    const mock = jest.fn();
 
-    const [nameInput, emailInput] = screen.getAllByRole('textbox');
+    render(<UserForm onUserAdd={mock}/>);
+
+    // const [nameInput, emailInput] = screen.getAllByRole('textbox');
+    const nameInput = screen.getByRole('textbox',{name: /name/i});
+    const emailInput = screen.getByRole('textbox',{name:/email/i});
+    
     const button = screen.getByRole('button');
 
     user.click(nameInput);
@@ -32,8 +38,9 @@ test('it calls onUserAdd when the form is submitted', ()=>{
 
     user.click(button);
 
-    expect(argList).toHaveLength(1);
-    expect(argList[0][0]).toEqual({name:'umer',email:'umer@gmail.com'});
+    // expect(argList).toHaveLength(1);
+    // expect(argList[0][0]).toEqual({name:'umer',email:'umer@gmail.com'});
     
-
+expect(mock).toHaveBeenCalled();
+expect(mock).toHaveBeenCalledWith({name:'umer',email:'umer@gmail.com'});
 });
